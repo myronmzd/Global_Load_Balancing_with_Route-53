@@ -12,15 +12,10 @@ resource "aws_route53_record" "www" {
     zone_id                = var.alb_zone_id_us_east_1
     evaluate_target_health = true
   }
-
-  alias {
-    name                   = var.alb_dns_name_us_west_2
-    zone_id                = var.alb_zone_id_us_west_2
-    evaluate_target_health = true
-  }
-
   set_identifier = "us-east-1"
-  weight         = 1
+  failover_routing_policy {
+    type = "PRIMARY"
+  }
 }
 
 resource "aws_route53_record" "www_failover" {
@@ -29,13 +24,12 @@ resource "aws_route53_record" "www_failover" {
   type    = "A"
 
   alias {
-    name                   = var.alb_dns_name_us_west_2
-    zone_id                = var.alb_zone_id_us_west_2
+    name                   = var.alb_dns_name_us_west_1
+    zone_id                = var.alb_zone_id_us_west_1
     evaluate_target_health = true
   }
 
-  set_identifier = "us-west-2"
-  weight         = 1
+  set_identifier = "us-west-1"
   failover_routing_policy {
     type = "SECONDARY"
   }

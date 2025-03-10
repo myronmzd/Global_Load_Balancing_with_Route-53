@@ -1,40 +1,82 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+    }
+  }
+}
 resource "aws_vpc" "main" {
-  cidr_block = var.cidr_block
-
+  cidr_block       = var.vpc_cidr
+  instance_tenancy = "default"
   tags = {
     Name = "main-vpc"
   }
 }
 
-resource "aws_subnet" "public" {
-  count = 2
 
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = element(var.public_subnet_cidrs, count.index)
+resource "aws_subnet" "public_subnet" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.public_subnet_cidrs
   map_public_ip_on_launch = true
-
-  tags = {
-    Name = "public-subnet-${count.index}"
-  }
+  availability_zone       = var.availability_zone_public
 }
 
-resource "aws_subnet" "private" {
-  count = 2
-
-  vpc_id     = aws_vpc.main.id
-  cidr_block = element(var.private_subnet_cidrs, count.index)
-
-  tags = {
-    Name = "private-subnet-${count.index}"
-  }
+resource "aws_subnet" "private_subnet" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.private_subnet_cidrs
+  map_public_ip_on_launch = false
+  availability_zone       = var.availability_zone_pravate
 }
 
-resource "aws_security_group" "alb_sg" {
+resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
+}
+
+resource "aws_route_table" "public_route_table" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.igw.id
+  }
+}
+
+resource "aws_route_table_association" "public_association" {
+  subnet_id      = aws_subnet.public_subnet.id
+  route_table_id = aws_route_table.public_route_table.id
+}
+
+resource "aws_route_table" "private_route_table" {
+  vpc_id = aws_vpc.main.id
+}
+
+resource "aws_route_table_association" "private_association" {
+  subnet_id      = aws_subnet.private_subnet.id
+  route_table_id = aws_route_table.private_route_table.id
+}
+
+
+resource "aws_security_group" "ec2_sg" {
+  name   = "ec2_security_group"
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["103.195.202.60/32"] # Replace with your public IP addres and check after restart your ip may change 
+  }
 
   ingress {
     from_port   = 80
     to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -44,9 +86,5 @@ resource "aws_security_group" "alb_sg" {
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "alb-sg"
   }
 }

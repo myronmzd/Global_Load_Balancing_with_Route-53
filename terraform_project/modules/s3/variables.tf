@@ -12,8 +12,7 @@ variable "region" {
   description = "AWS region"
   type        = string
 }
-
-variable "route_table_ids" {
-  description = "Route table IDs for the VPC endpoint"
-  type        = list(string)
+variable "private_route_table" {
+  description = "Private route table ID for the VPC endpoint"
+  type        = string
 }
