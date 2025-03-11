@@ -1,3 +1,13 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0" # Use the latest version compatible with 5.x
+    }
+  }
+
+  required_version = ">= 1.3.0" # Ensure Terraform version compatibility
+}
 provider "aws" {
   alias = "us-east-1"
 
@@ -66,7 +76,7 @@ module "alb_us_east_1" {
     aws = aws.us-east-1
   }
   security_group_id = module.network_us_east_1.security_groups_id
-  public_subnet_ids = module.network_us_east_1.public_subnet_id
+  public_subnet_ids = [module.network_us_east_1.public_subnet_id]
   vpc_id            = module.network_us_east_1.vpc_id
   alb_name          = "albe"
   target_group_name = "tgeast"
@@ -78,7 +88,7 @@ module "alb_us_west_1" {
     aws = aws.us-west-1
   }
   security_group_id = module.network_us_west_1.security_groups_id
-  public_subnet_ids = module.network_us_west_1.public_subnet_id
+  public_subnet_ids = [module.network_us_west_1.public_subnet_id]
   vpc_id            = module.network_us_west_1.vpc_id
   alb_name          = "albw"
   target_group_name = "tgwest"
@@ -98,9 +108,6 @@ module "dns" {
 
 module "s3_east1" {
   source = "./modules/s3"
-  providers = {
-    aws = aws.us-east-1
-  }
   bucket_name         = "3325u0jfw0324nm0"
   vpc_id              = module.network_us_east_1.vpc_id
   region              = "us-east-1"
@@ -109,11 +116,8 @@ module "s3_east1" {
 
 module "s3_west1" {
   source = "./modules/s3"
-  providers = {
-    aws = aws.us-west-1
-  }
   bucket_name         = "23423034254320321543908"
   vpc_id              = module.network_us_west_1.vpc_id
-  region              = "us-west-2"
+  region              = "us-west-1"
   private_route_tables = module.network_us_west_1.private_route_table
 }

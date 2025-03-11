@@ -1,10 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-}
 
 resource "aws_network_interface" "public_eni" {
   subnet_id         = var.public_subnet_id

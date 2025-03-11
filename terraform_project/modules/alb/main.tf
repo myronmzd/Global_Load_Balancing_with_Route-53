@@ -1,11 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source = "hashicorp/aws"
-    }
-  }
-}
-
 resource "aws_lb" "alb" {
   internal           = false
   load_balancer_type = "application"
