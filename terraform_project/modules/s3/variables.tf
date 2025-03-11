@@ -12,7 +12,7 @@ variable "region" {
   description = "AWS region"
   type        = string
 }
-variable "private_route_table" {
+variable "private_route_tables" {
   description = "Private route table ID for the VPC endpoint"
   type        = string
 }
