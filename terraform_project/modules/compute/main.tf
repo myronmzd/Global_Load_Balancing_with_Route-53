@@ -29,7 +29,7 @@ resource "aws_network_interface" "private_eni" {
 resource "aws_instance" "main_instance" {
   ami           = var.ami
   instance_type = var.instance_type
-  key_name      = "Mykey"
+  key_name      = var.key_name
 
   network_interface {
     network_interface_id = aws_network_interface.public_eni.id
