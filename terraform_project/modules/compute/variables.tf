@@ -31,4 +31,8 @@ variable "key_name" {
   description = "The key name to use for the instance"
   type        = string
 }
-  
+
+variable "instance_profile" {
+    description = "The instance profile name"
+  type        = string
+}

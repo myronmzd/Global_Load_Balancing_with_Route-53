@@ -7,8 +7,6 @@ terraform {
   }
 }
 
-
-
 resource "aws_network_interface" "public_eni" {
   subnet_id         = var.public_subnet_id
   security_groups   = [var.security_group_id]
@@ -30,7 +28,8 @@ resource "aws_instance" "main_instance" {
   ami           = var.ami
   instance_type = var.instance_type
   key_name      = var.key_name
-
+  iam_instance_profile = var.instance_profile
+  
   network_interface {
     network_interface_id = aws_network_interface.public_eni.id
     device_index         = 0

@@ -14,5 +14,7 @@ terraform apply -auto-approve
 
 terraform init -reconfigure
 
+terraform plan -out=output.tfplan
+terraform show output.tfplan > output.txt
 
 vpc is not configure and s3 bucket in west not created and 
