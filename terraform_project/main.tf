@@ -5,9 +5,13 @@ terraform {
       version = "~> 5.0" # Use the latest version compatible with 5.x
     }
   }
-
-  required_version = ">= 1.3.0" # Ensure Terraform version compatibility
 }
+
+# Default provider configuration (required)
+provider "aws" {
+  region = "us-east-1"  # or your preferred default region
+}
+
 provider "aws" {
   alias = "us-east-1"
 
@@ -107,17 +111,17 @@ module "dns" {
 }
 
 module "s3_east1" {
-  source = "./modules/s3"
-  bucket_name         = "3325u0jfw0324nm0"
-  vpc_id              = module.network_us_east_1.vpc_id
-  region              = "us-east-1"
+  source               = "./modules/s3"
+  bucket_name          = "3325u0jfw0324nm0"
+  vpc_id               = module.network_us_east_1.vpc_id
+  region               = "us-east-1"
   private_route_tables = module.network_us_west_1.private_route_table
 }
 
 module "s3_west1" {
-  source = "./modules/s3"
-  bucket_name         = "23423034254320321543908"
-  vpc_id              = module.network_us_west_1.vpc_id
-  region              = "us-west-1"
+  source               = "./modules/s3"
+  bucket_name          = "23423034254320321543908"
+  vpc_id               = module.network_us_west_1.vpc_id
+  region               = "us-west-1"
   private_route_tables = module.network_us_west_1.private_route_table
 }
