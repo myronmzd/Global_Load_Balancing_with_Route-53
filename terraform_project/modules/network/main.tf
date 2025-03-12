@@ -17,18 +17,26 @@ resource "aws_vpc" "main" {
 }
 
 
-resource "aws_subnet" "public_subnet" {
+resource "aws_subnet" "public_subnet1" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_cidrs
+  cidr_block              = var.public_subnet_cidrs_1
   map_public_ip_on_launch = true
-  availability_zone       = var.availability_zone_public
+  availability_zone       = var.availability_zone_public_1
+}
+# just for the sake of the alb it need two public subnet
+
+resource "aws_subnet" "public_subnet2" {
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = var.public_subnet_cidrs_2
+  map_public_ip_on_launch = true
+  availability_zone       = var.availability_zone_public_2
 }
 
 resource "aws_subnet" "private_subnet" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = var.private_subnet_cidrs
   map_public_ip_on_launch = false
-  availability_zone       = var.availability_zone_pravate
+  availability_zone       = var.availability_zone_private
 }
 
 resource "aws_internet_gateway" "igw" {
@@ -44,8 +52,13 @@ resource "aws_route_table" "public_route_table" {
   }
 }
 
-resource "aws_route_table_association" "public_association" {
-  subnet_id      = aws_subnet.public_subnet.id
+resource "aws_route_table_association" "public_association_1" {
+  subnet_id      = aws_subnet.public_subnet1.id
+  route_table_id = aws_route_table.public_route_table.id
+}
+
+resource "aws_route_table_association" "public_association_2" {
+  subnet_id      = aws_subnet.public_subnet2.id
   route_table_id = aws_route_table.public_route_table.id
 }
 
