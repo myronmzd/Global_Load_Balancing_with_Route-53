@@ -5,8 +5,14 @@ Application Load Balancer (ALB) with EC2 instances in two different AWS regions,
 
 terraform init -upgrade
 terraform validate
-terraform fmt -recursive
 terraform plan
+terraform fmt -recursive
 terraform destroy
 
 terraform apply -auto-approve
+
+
+terraform init -reconfigure
+
+
+vpc is not configure and s3 bucket in west not created and 

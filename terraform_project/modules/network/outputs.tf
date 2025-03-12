@@ -15,6 +15,6 @@ output "private_route_table" {
 output "public_subnet_idsss" {
   value = [aws_subnet.public_subnet1.id, aws_subnet.public_subnet2.id]
 }
-output"public_subnet_ids" {
+output "public_subnet_ids" {
   value = aws_subnet.public_subnet1.id
 }

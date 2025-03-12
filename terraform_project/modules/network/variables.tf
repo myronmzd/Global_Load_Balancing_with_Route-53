@@ -19,7 +19,7 @@ variable "public_subnet_cidrs_1" {
 }
 variable "public_subnet_cidrs_2" {
   description = "The CIDR block for the first public subnet"
-  type        = string 
+  type        = string
 }
 variable "availability_zone_public_2" {
   description = "The availability zone for the first public subnet"
