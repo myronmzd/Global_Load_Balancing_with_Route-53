@@ -36,3 +36,9 @@ variable "instance_profile" {
     description = "The instance profile name"
   type        = string
 }
+
+variable "region" {
+  description = "The region"
+  type        = string
+  
+}

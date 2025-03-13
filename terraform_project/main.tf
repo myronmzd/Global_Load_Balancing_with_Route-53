@@ -57,6 +57,7 @@ module "compute_east_1" {
   ami               = "ami-08b5b3a93ed654d19"
   instance_type     = "t2.micro"
   key_name          = "MykeyE"
+  region               = "us-east-1" ## only passing it to so that it shows in ec2 instance 
   vpc_id            = module.network_us_east_1.vpc_id
   public_subnet_id  = module.network_us_east_1.public_subnet_ids
   private_subnet_id = module.network_us_east_1.private_subnet_id
@@ -72,6 +73,7 @@ module "compute_west_1" {
   ami               = "ami-01eb4eefd88522422"
   instance_type     = "t2.micro"
   key_name          = "MykeyW"
+  region            = "us-west-1" # only passing it to so that it shows in ec2 instance 
   vpc_id            = module.network_us_west_1.vpc_id
   public_subnet_id  = module.network_us_west_1.public_subnet_ids
   private_subnet_id = module.network_us_west_1.private_subnet_id
@@ -115,8 +117,8 @@ module "dns" {
   }
 
   domain_name            = "myronmzd.com"
-  intance_public_ip1   = module.compute_east_1.instance_public_ip
-  intance_public_ip2   = module.compute_west_1.instance_public_ip
+  intance_public_ip1   = module.compute_east_1.public_ip
+  intance_public_ip2   = module.compute_west_1.public_ip
   # alb_dns_name_us_east_1 = module.alb_us_east_1.alb_dns_name
   # alb_zone_id_us_east_1  = module.alb_us_east_1.alb_zone_id
   # alb_dns_name_us_west_1 = module.alb_us_west_1.alb_dns_name
