@@ -28,8 +28,8 @@ module "network_us_east_1" {
   public_subnet_cidrs_1      = "10.0.1.0/24"
   public_subnet_cidrs_2      = "10.0.2.0/24"
   private_subnet_cidrs       = "10.0.3.0/24"
-  availability_zone_private  = "us-east-1b"
-  availability_zone_public_1 = "us-east-1a"
+  availability_zone_private  = "us-east-1b"   # As the private and public_1 is connected to one intances to give a public and prvate eni the same az
+  availability_zone_public_1 = "us-east-1b"
   availability_zone_public_2 = "us-east-1a"
 }
 
@@ -42,9 +42,9 @@ module "network_us_west_1" {
   public_subnet_cidrs_1      = "10.1.1.0/24"
   public_subnet_cidrs_2      = "10.1.2.0/24"
   private_subnet_cidrs       = "10.1.3.0/24"
-  availability_zone_private  = "us-west-1b"
+  availability_zone_private  = "us-west-1c" # As the private and public_1 is connected to one intances to give a public and prvate eni the same az
   availability_zone_public_1 = "us-west-1c"
-  availability_zone_public_2 = "us-west-1c"
+  availability_zone_public_2 = "us-west-1b"
 }
 
 module "compute_east_1" {

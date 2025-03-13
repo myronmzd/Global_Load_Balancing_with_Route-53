@@ -18,3 +18,7 @@ terraform plan -out=output.tfplan
 terraform show output.tfplan > output.txt
 
 vpc is not configure and s3 bucket in west not created and 
+
+
+aws ec2 describe-availability-zones --region us-east-1
+aws ec2 describe-availability-zones --region us-west-1

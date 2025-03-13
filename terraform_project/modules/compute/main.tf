@@ -11,6 +11,7 @@ resource "aws_network_interface" "public_eni" {
   subnet_id         = var.public_subnet_id
   security_groups   = [var.security_group_id]
   source_dest_check = true
+  
   tags = {
     Name = "public_eni"
   }
@@ -23,6 +24,14 @@ resource "aws_network_interface" "private_eni" {
     Name = "private_eni"
   }
 }
+
+resource "aws_eip" "public_ip" {
+  network_interface = aws_network_interface.public_eni.id
+  tags = {
+    Name = "public-eip"
+  }
+}
+
 
 resource "aws_instance" "main_instance" {
   ami           = var.ami

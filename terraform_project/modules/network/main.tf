@@ -55,6 +55,7 @@ resource "aws_route_table" "public_route_table" {
 resource "aws_route_table_association" "public_association_1" {
   subnet_id      = aws_subnet.public_subnet1.id
   route_table_id = aws_route_table.public_route_table.id
+
 }
 
 resource "aws_route_table_association" "public_association_2" {
@@ -71,6 +72,10 @@ resource "aws_route_table_association" "private_association" {
   route_table_id = aws_route_table.private_route_table.id
 }
 
+# Fetch public IP of the machine running Terraform
+data "http" "my_ip" {
+  url = "https://checkip.amazonaws.com"
+}
 
 resource "aws_security_group" "ec2_sg" {
   name   = "ec2_security_group"
@@ -80,7 +85,8 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["103.195.202.60/32"] # Replace with your public IP addres and check after restart your ip may change 
+    cidr_blocks = ["${chomp(data.http.my_ip.response_body)}/32"]  # Use fetched IP
+    # Replace with your public IP addres and check after restart your ip may change 
   }
 
   ingress {
