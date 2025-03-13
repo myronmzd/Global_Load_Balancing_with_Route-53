@@ -107,19 +107,21 @@ module "compute_west_1" {
 # # can not give varaialbe name as public_subnet and private_subnet as it is already defined in the module
 
 
-# module "dns" {
-#   source = "./modules/dns"
-#   # Default provider for us-east-1
-#   providers = {
-#     aws = aws  # Explicitly assigning the default provider
-#   }
+module "dns" {
+  source = "./modules/dns"
+  # Default provider for us-east-1
+  providers = {
+    aws = aws  # Explicitly assigning the default provider
+  }
 
-#   domain_name            = "myronmzd.com"
-#   alb_dns_name_us_east_1 = module.alb_us_east_1.alb_dns_name
-#   alb_zone_id_us_east_1  = module.alb_us_east_1.alb_zone_id
-#   alb_dns_name_us_west_1 = module.alb_us_west_1.alb_dns_name
-#   alb_zone_id_us_west_1  = module.alb_us_west_1.alb_zone_id
-# }
+  domain_name            = "myronmzd.com"
+  intance_public_ip1   = module.compute_east_1.instance_public_ip
+  intance_public_ip2   = module.compute_west_1.instance_public_ip
+  # alb_dns_name_us_east_1 = module.alb_us_east_1.alb_dns_name
+  # alb_zone_id_us_east_1  = module.alb_us_east_1.alb_zone_id
+  # alb_dns_name_us_west_1 = module.alb_us_west_1.alb_dns_name
+  # alb_zone_id_us_west_1  = module.alb_us_west_1.alb_zone_id
+}
 
 module "iam" {
   source = "./modules/iam"

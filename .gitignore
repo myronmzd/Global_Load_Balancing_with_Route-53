@@ -6,9 +6,7 @@ terraform_project/modules/compute/Mykey.pem
 # this file is key pair file
 terraform_project/terraform.tfstate
 # this file is maintained automatically by "terraform apply"
-terraform_project/terraform.tfstate.backup
-terraform_project/terraform.tfstate.1741804163.backup
-terraform_project/terraform.tfstate.1741804179.backup
+terraform_project/terraform.tfstate*
 # this file is maintained automatically by "terraform apply"    
 *.pem
 terraform_project/modules/compute/Mykey.pem
