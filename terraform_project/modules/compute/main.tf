@@ -10,7 +10,7 @@ resource "aws_network_interface" "public_eni" {
   subnet_id         = var.public_subnet_id
   security_groups   = [var.security_group_id]
   source_dest_check = true
-  
+
   tags = {
     Name = "public_eni"
   }
@@ -26,8 +26,8 @@ resource "aws_network_interface" "private_eni" {
 
 resource "aws_eip" "public_ip" {
   domain            = "vpc"
-  network_interface = aws_network_interface.public_eni.id  # Changed from instance to network_interface
-  
+  network_interface = aws_network_interface.public_eni.id # Changed from instance to network_interface
+
   tags = {
     Name = "public-eip"
   }
@@ -39,7 +39,7 @@ resource "aws_eip" "public_ip" {
 resource "aws_instance" "main_instance" {
   ami                  = var.ami
   instance_type        = var.instance_type
-  key_name            = var.key_name
+  key_name             = var.key_name
   iam_instance_profile = var.instance_profile
 
   network_interface {
@@ -65,7 +65,7 @@ resource "null_resource" "setup_web_server" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("${path.module}/Mykey.pem")
+      private_key = file("${path.module}/${var.key_name}.pem")
       host        = aws_eip.public_ip.public_ip
       timeout     = "4m"
     }
@@ -86,7 +86,7 @@ resource "null_resource" "setup_web_server" {
       "if ! systemctl is-enabled --quiet nginx; then sudo systemctl enable nginx; fi",
 
       # Copy file from S3 if it doesn't already exist
-      "if [ ! -f /var/www/html/index.html ]; then aws s3 cp s3://mybucketmain1212/home.html /tmp/home.html; fi",
+      "if [ ! -f /var/www/html/index.html ]; then aws s3 cp s3://${var.bucket_nameed}/home.html /tmp/home.html; fi",
       "if [ ! -f /var/www/html/index.html ]; then sudo mv /tmp/home.html /var/www/html/index.html; fi",
 
       "sudo rm -rf /var/www/html/index.nginx-debian.html",

@@ -33,12 +33,16 @@ variable "key_name" {
 }
 
 variable "instance_profile" {
-    description = "The instance profile name"
+  description = "The instance profile name"
   type        = string
 }
 
 variable "region" {
   description = "The region"
+  type        = string
+}
+variable "bucket_nameed" {
+  description = "The bucket name"
   type        = string
   
 }

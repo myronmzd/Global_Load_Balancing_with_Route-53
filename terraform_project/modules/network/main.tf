@@ -85,7 +85,7 @@ resource "aws_security_group" "ec2_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${chomp(data.http.my_ip.response_body)}/32"]  # Use fetched IP
+    cidr_blocks = ["${chomp(data.http.my_ip.response_body)}/32"] # Use fetched IP
     # Replace with your public IP addres and check after restart your ip may change 
   }
 

@@ -21,14 +21,14 @@ module "network_us_east_1" {
   source = "./modules/network"
   # Default provider for us-east-1
   providers = {
-    aws = aws  # Explicitly assigning the default provider
+    aws = aws # Explicitly assigning the default provider
   }
 
   vpc_cidr                   = "10.0.0.0/16"
   public_subnet_cidrs_1      = "10.0.1.0/24"
   public_subnet_cidrs_2      = "10.0.2.0/24"
   private_subnet_cidrs       = "10.0.3.0/24"
-  availability_zone_private  = "us-east-1b"   # As the private and public_1 is connected to one intances to give a public and prvate eni the same az
+  availability_zone_private  = "us-east-1b" # As the private and public_1 is connected to one intances to give a public and prvate eni the same az
   availability_zone_public_1 = "us-east-1b"
   availability_zone_public_2 = "us-east-1a"
 }
@@ -51,18 +51,19 @@ module "compute_east_1" {
   source = "./modules/compute"
   # Default provider for us-east-1
   providers = {
-    aws = aws  # Explicitly assigning the default provider
+    aws = aws # Explicitly assigning the default provider
   }
 
-  ami               = "ami-08b5b3a93ed654d19"
+  ami               = "ami-04b4f1a9cf54c11d0"
   instance_type     = "t2.micro"
   key_name          = "MykeyE"
-  region               = "us-east-1" ## only passing it to so that it shows in ec2 instance 
+  region            = "us-east-1" ## only passing it to so that it shows in ec2 instance 
   vpc_id            = module.network_us_east_1.vpc_id
   public_subnet_id  = module.network_us_east_1.public_subnet_ids
   private_subnet_id = module.network_us_east_1.private_subnet_id
   security_group_id = module.network_us_east_1.security_groups_id
   instance_profile  = module.iam.aws_iam_instance_profile
+  bucket_nameed       = module.s3_east1.bucket_name
 }
 
 module "compute_west_1" {
@@ -70,7 +71,7 @@ module "compute_west_1" {
   providers = {
     aws = aws.us-west-1 # Aliased provider for us-west-1
   }
-  ami               = "ami-01eb4eefd88522422"
+  ami               = "ami-07d2649d67dbe8900"
   instance_type     = "t2.micro"
   key_name          = "MykeyW"
   region            = "us-west-1" # only passing it to so that it shows in ec2 instance 
@@ -79,6 +80,7 @@ module "compute_west_1" {
   private_subnet_id = module.network_us_west_1.private_subnet_id
   security_group_id = module.network_us_west_1.security_groups_id
   instance_profile  = module.iam.aws_iam_instance_profile
+  bucket_nameed       = module.s3_west1.bucket_name
 }
 
 # module "alb_us_east_1" {
@@ -113,12 +115,13 @@ module "dns" {
   source = "./modules/dns"
   # Default provider for us-east-1
   providers = {
-    aws = aws  # Explicitly assigning the default provider
+    aws = aws # Explicitly assigning the default provider
   }
 
-  domain_name            = "myronmzd.com"
-  intance_public_ip1   = module.compute_east_1.public_ip
-  intance_public_ip2   = module.compute_west_1.public_ip
+  domain_name        = "myronmzd.com"
+  instance_public_ip1 = module.compute_east_1.public_ip
+  instance_public_ip2 = module.compute_west_1.public_ip
+  hosted_zone_id     = "myronmzd.com"
   # alb_dns_name_us_east_1 = module.alb_us_east_1.alb_dns_name
   # alb_zone_id_us_east_1  = module.alb_us_east_1.alb_zone_id
   # alb_dns_name_us_west_1 = module.alb_us_west_1.alb_dns_name
@@ -129,7 +132,7 @@ module "iam" {
   source = "./modules/iam"
   # Default provider for us-east-1
   providers = {
-    aws = aws  # Explicitly assigning the default provider
+    aws = aws # Explicitly assigning the default provider
   }
   bucket_names = [module.s3_east1.bucket_name, module.s3_west1.bucket_name]
   bucket_arns  = [module.s3_east1.bucket_arn, module.s3_west1.bucket_arn]
@@ -139,7 +142,7 @@ module "iam" {
 module "s3_east1" {
   # Default provider for us-east-1
   providers = {
-    aws = aws  # Explicitly assigning the default provider
+    aws = aws # Explicitly assigning the default provider
   }
   source               = "./modules/s3"
   vpc_id               = module.network_us_east_1.vpc_id
